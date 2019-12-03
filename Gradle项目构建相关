@@ -1,0 +1,8 @@
+1. javaVersion 1.8 已经包含了retrolambda 模块，不需要单独引用 classpath 'me.tatarka:gradle-retrolambda:3.2.0'
+2.插件不兼容问题
+
+Unable to find method 'org.gradle.api.tasks.compile.CompileOptions.setBootClasspath(Ljava/lang/String;)V'.
+Possible causes for this unexpected error include:
+这是因为工程路径下build.gradle 版本与 gradle-wapper.propertise 内配置的gradle 插件版本不一致导致，配置为配套即可
+ 
+
