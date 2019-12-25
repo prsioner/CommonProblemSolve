@@ -6,3 +6,7 @@ Possible causes for this unexpected error include:
 这是因为工程路径下build.gradle 版本与 gradle-wapper.propertise 内配置的gradle 插件版本不一致导致，配置为配套即可
  
 
+2.强制刷新依赖版本
+工程引用太多第三方库，maven 会给我们保存缓存，有缓存会先用缓存，然后定时更新，有时会出现项目无法同步最新代码的问题，可以使用gradle 命令进行强制刷新版本
+
+命令行：  gradlew --refresh-dependencies assemble
