@@ -10,3 +10,82 @@ Possible causes for this unexpected error include:
 工程引用太多第三方库，maven 会给我们保存缓存，有缓存会先用缓存，然后定时更新，有时会出现项目无法同步最新代码的问题，可以使用gradle 命令进行强制刷新版本
 
 命令行：  gradlew --refresh-dependencies assemble
+
+3.批量修改生成Apk文件名
+app build.gradle  android{} 内指定：
+applicationVariants.all {
+    variant ->
+        variant.outputs.all {
+
+            outputFileName = "app_v${defaultConfig.versionName}_${variant.productFlavors[0].name}_" + buildType.name + ".apk";
+
+        }
+}
+
+
+4.有些第三方库又同时引用不同版本的一个库，无法编译通过，可以强制指定该库的引用版本
+app build.gradle 外层指定：
+
+configurations.all {
+
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.parse.bolts') {
+                details.useVersion "1.4.0"
+            }
+        }
+
+}
+
+4.动态配置AndroidManifest文件
+我们需要打包多渠道包的时候，进行友盟统计，就需要区分不同的渠道
+androidManifest的配置：
+<meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="google" />
+
+app build.gradle  android{} 内添加：
+productFlavors {
+        baidu {
+            manifestPlaceholders = [UMENG_CHANNEL: "C00001"]
+        }
+        _360 {
+            manifestPlaceholders = [UMENG_CHANNEL: "C00002"]
+        }
+        yingyongbao {
+            manifestPlaceholders = [UMENG_CHANNEL: "C00003"]
+        }
+        ali {
+            manifestPlaceholders = [UMENG_CHANNEL: "C00004"]
+        }
+        xiaomi {
+            manifestPlaceholders = [UMENG_CHANNEL: "C00005"]
+        }
+        ...
+
+    }
+
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL: name]
+    }
+
+
+5.自定义BuildConfig
+BuildConfig 这个类是 android gradle 构建脚本自动生成的类，无需用户手动修改，里面有很多app 配置相关的属性可以直接使用，例如DEBUG
+BuildConfig.DEBUG 在调试的时候返回true,正式打包的时候，返回false,非常好用
+那我们可以自定义一些属性到BuildConfig 里面吗，当然是可以的
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
