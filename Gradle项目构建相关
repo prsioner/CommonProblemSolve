@@ -74,6 +74,111 @@ BuildConfig 这个类是 android gradle 构建脚本自动生成的类，无需�
 BuildConfig.DEBUG 在调试的时候返回true,正式打包的时候，返回false,非常好用
 那我们可以自定义一些属性到BuildConfig 里面吗，当然是可以的
 
+gradle 提供了buildConfigField(String type,String name,String value)让我们可以添加自己的常量到BuildConfig中
+
+productFlavors{
+        google {
+            buildConfigField 'String','WEB_URL','"http://www.google.com"'
+        }
+        baidu {
+            buildConfigField 'String','WEB_URL','"http://www.baidu.com"'
+        }
+
+    }
+
+我们看同步后的BuildConfig 类
+public final class BuildConfig {
+  public static final boolean DEBUG = Boolean.parseBoolean("true");
+  public static final String APPLICATION_ID = "com.prsioner.testapp";
+  public static final String BUILD_TYPE = "debug";
+  public static final String FLAVOR = "baidu";
+  public static final int VERSION_CODE = 1;
+  public static final String VERSION_NAME = "1.0";
+  // Fields from product flavor: baidu
+  public static final String WEB_URL = "http://www.baidu.com";
+}
+
+甚至可以根据debug、release 来配置不同的value值
+
+android{
+   buildTypes{
+      debug{
+        buildConfigField 'String','Name','"value1"'
+      }
+      release{
+        buildConfigField 'String','Name','"value2"'
+      }
+   }
+}
+
+
+6.DEX配置选项
+android studio 配置编译项目有时会提示java.lang.OutOfMemoryError:GC overhead limit exceeded ,内存不足
+我们可以配置
+dexOptions{} 来扩容编译空间，
+android{
+  dexOptions{
+    javaMaxHeapSize '4g'   //前提电脑有这么大的内存
+  }
+ }
+
+有时，我们工程很庞大，代码方法太多，函数超过65535个数时，就需要强制开启jumbMode 模式才可以构建成功
+
+dexOptions{
+   jumbMode true
+}
+我么还可以通过提升编译线程数量来提升编译效率
+
+dexOptions{
+  threadCount 2
+}
+
+7.突破方法数超过65535个限制
+android{
+ defalutConfig{
+  multiDexEnabled true
+ }
+}
+dependencies{
+ compile 'com.android.support.multidex:1.0.1'
+}
+
+定义Application 继承自 MultiDexApplication即可，如果application继承自第三方无法修改，则可以重写attachBaseContext方法
+
+public class SimpleApplication extends Application{
+   @overRide
+   public void attachBaseContext(Context context){
+      super.attachBaseContext(context);
+      MultiDex.install(this);
+   } 
+
+}
+
+
+8.自动清理未使用资源
+ 
+ android{
+    buildTypes{
+      release {
+        shrinkResources true
+      }
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
