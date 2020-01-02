@@ -166,6 +166,15 @@ public class SimpleApplication extends Application{
   }
 
 
+9.android studio 默认使用的编译器可能有点慢，可以使用 Jack 或Jill 这个全新的、高性能的编译器
+启用方式
+android{
+  productFlavors{
+   google{
+     useJack true
+   }
+  }
+}
 
 
 
