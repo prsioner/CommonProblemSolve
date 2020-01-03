@@ -177,7 +177,30 @@ android{
 }
 
 
+10.Lint支持
 
+lint 是android 为我们提供的针对代码、资源优化工具
+
+android{
+  lintOptions{
+    abortOnError true       
+    warningAsErrors true
+    check 'NewApi'
+  }
+}
+以上配置遇到Lint检查错误的时候会自动终止构建，Lint 的警告也会被当成错误处理 ，需要检查是否使用新API
+check 是lintOptions 内的一个属性也是一个方法，接受的参数有很多，称为Issue Id(s)
+
+lintOptions{
+ textReport true 
+}
+配置是否生成text报告，默认false 不生成
+还有很多配置的方法：
+lintConfig 
+noLines: 接受boolean类型，输出将不会包含源代码的行号
+htmlOutput 
+showAll   接受boolean 类型，标记是否显示所有输出，
+xmlOutput  接受file类型，生成xml报告路径
 
 
 
